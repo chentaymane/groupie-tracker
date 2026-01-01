@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{.Artist.Name}} - groupie-tracker</title>
+        <link  href="/static/artist.css" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">
+        <img src="{{.Artist.Image}}" alt="{{.Artist.Name}}">
+        <h1>{{.Artist.Name}}</h1>
+        
+        <div class="section">
+            <div class="section-title">Members</div>
+            {{range .Artist.Members}}
+            <div class="list-item">{{.}}</div>
+            {{end}}
+        </div>
+
+        <div class="section">
+            <div class="section-title">Band Information</div>
+            <div class="list-item"><strong>Creation Date:</strong> {{.Artist.CreationDate}}</div>
+            <div class="list-item"><strong>First Album:</strong> {{.Artist.FirstAlbum}}</div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Concert Relations</div>
+            {{range $place, $dates := .Relations}}
+            <div class="relation-item">
+                <div class="relation-place">{{$place}}</div>
+                <div class="relation-dates">{{range $dates}}{{.}} {{end}}</div>
+            </div>
+            {{end}}
+        </div>
+
+        <div class="section">
+            <div class="section-title">Locations</div>
+            {{range .Locations}}
+            <div class="list-item">{{.}}</div>
+            {{end}}
+        </div>
+
+        <div class="section">
+            <div class="section-title">Dates</div>
+            {{range .Dates}}
+            <div class="list-item">{{.}}</div>
+            {{end}}
+        </div>
+
+        <a href="/" class="back-link">← Back to list</a>
+    </div>
+</body>
+</html>

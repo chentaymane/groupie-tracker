@@ -1,0 +1,27 @@
+package zone
+
+import (
+	"bytes"
+	"html/template"
+	"net/http"
+)
+
+func HandleError(w http.ResponseWriter, status int, message string) {
+	tmpl, _ := template.ParseFiles("templates/err.html")
+
+	data := struct {
+		Message string
+		Status  int
+	}{
+		Message: message,
+		Status:  status,
+	}
+
+	var buf bytes.Buffer
+	if err := tmpl.Execute(&buf, data); err != nil {
+		http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(status)
+	buf.WriteTo(w)
+}
