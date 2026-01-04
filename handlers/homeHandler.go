@@ -4,8 +4,11 @@ import (
 	"bytes"
 	"html/template"
 	"net/http"
+
+	zone "zone/fetchers"
 )
 
+// HandlerHome serves the home page with a list of artists
 func HandlerHome(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		HandleError(w, http.StatusNotFound, "Page not found")
@@ -17,7 +20,7 @@ func HandlerHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	artists, err := FetchArtists()
+	artists, err := zone.FetchArtists()
 	if err != nil {
 		HandleError(w, http.StatusInternalServerError, "500 Internal Server Error")
 		return

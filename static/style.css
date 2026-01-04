@@ -3,10 +3,6 @@
 /* Dark theme + neon text + framed titles     */
 /* ------------------------------------------- */
 
-/* Import Poppins font from Google Fonts in your HTML <head>:
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-*/
-
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif; /* clean modern font */

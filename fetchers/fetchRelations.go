@@ -7,10 +7,12 @@ import (
 	"strconv"
 )
 
+// Relations represents the structure of the relations data from the API
 type Relations struct {
 	DatesLocations map[string][]string `json:"datesLocations"`
 }
 
+// FetchRelations retrieves the dates and locations for a given artist ID from the external API
 func FetchRelations(id int) (map[string][]string, error) {
 	url := "https://groupietrackers.herokuapp.com/api/relation/" + strconv.Itoa(id)
 

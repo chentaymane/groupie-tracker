@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+// HandleError renders an error page with the given status and message
 func HandleError(w http.ResponseWriter, status int, message string) {
 	tmpl, _ := template.ParseFiles("templates/err.html")
 

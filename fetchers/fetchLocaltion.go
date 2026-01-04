@@ -6,10 +6,12 @@ import (
 	"strconv"
 )
 
+// Locations represents the structure of the location data from the API
 type Locations struct {
 	Locations []string `json:"locations"`
 }
 
+// FetchLocation retrieves the locations for a given artist ID from the external API
 func FetchLocation(id int) ([]string, error) {
 	relationsURL := "https://groupietrackers.herokuapp.com/api/locations/"
 	resp, err := http.Get(relationsURL + strconv.Itoa(id))

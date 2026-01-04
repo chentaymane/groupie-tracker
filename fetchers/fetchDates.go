@@ -6,11 +6,13 @@ import (
 	"strconv"
 )
 
+// Dates represents the structure of the date data from the API
 type Dates struct {
 	ID    int      `json:"id"`
 	Dates []string `json:"dates"`
 }
 
+// FetchDate retrieves the dates for a given artist ID from the external API
 func FetchDate(id int) ([]string, error) {
 	url := "https://groupietrackers.herokuapp.com/api/dates/" + strconv.Itoa(id)
 

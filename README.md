@@ -44,36 +44,27 @@
 ## Project Structure
 
 ```
-.
-├── checkdata.txt
+├── fetchers
+│   ├── fetchArtist.go
+│   ├── fetchDates.go
+│   ├── fetchLocaltion.go
+│   ├── fetchRelations.go
+│   └── sub-func.go
 ├── go.mod
-├── handlers/
-│   ├── artist.go
-│   ├── date.go
-│   ├── Error.go
-│   ├── fetchaartist.go
-│   ├── fetchlocaltion.go
-│   ├── home.go
-│   ├── Relations.go
-│   ├── statichandler.go
-│   └── sub-func.go
+├── handlers
+│   ├── artistHandler.go
+│   ├── errorHandler.go
+│   ├── homeHandler.go
+│   └── staticHandler.go
 ├── main.go
 ├── README.md
-├── static/
-│   ├── artist.css
-│   ├── error.css
-│   └── index.css
-└── templates/
+├── static
+│   └── style.css
+└── templates
     ├── artist.html
     ├── err.html
     └── index.html
 ```
-
-* `main.go` – the entry point that sets up the server and routes.
-* `handlers/` – contains Go files for HTTP handlers, API fetching, and page rendering.
-* `templates/` – HTML templates for the home page and artist detail pages.
-* `static/` – CSS files for styling the pages.
-
 ---
 
 ## API
@@ -90,5 +81,6 @@ This project is for educational purposes only.
 
 ## Authors
 
-- yzarhoun  - [GitHub](https://github.com/quadS01) - [Gitea](https://learn.zone01oujda.ma/git/yzarhoun)
+- bguitoni  - [GitHub](https://github.com/Badrone7) - [Gitea](https://learn.zone01oujda.ma/git/bguitoni)
 - halhyane  - [GitHub](https://github.com/Houssam-Alhyane) - [Gitea](https://learn.zone01oujda.ma/git/halhyane)
+- achent  - [GitHub](https://github.com/chentaymane) - [Gitea](https://learn.zone01oujda.ma/git/achent)

@@ -7,6 +7,11 @@ import (
 	zone "zone/handlers"
 )
 
+/*
+   This Program is supposed to fetch data from a public API and displays information about music artists and bands.
+*/
+
+// The main function
 func main() {
 	http.HandleFunc("/static/", zone.HandleStatic)
 	http.HandleFunc("/", zone.HandlerHome)
