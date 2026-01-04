@@ -25,7 +25,7 @@ func HandlerArtist(w http.ResponseWriter, r *http.Request) {
 
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		HandleError(w, http.StatusBadRequest, "Invalid artist ID")
+		HandleError(w, http.StatusNotFound, "Page not found")
 		return
 	}
 
