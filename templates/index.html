@@ -2,23 +2,82 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>groupie-tracker</title>
-    <link  href="/static/index.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groupie Tracker</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <h1>groupie-tracker</h1>
-    <div class="grid">
-        {{range .}}
-        <div class="artist">
-            <img src="{{.Image}}" >
-            <h3>{{.Name}}</h3>
-          <form action="/artist/{{.ID}}" method="get">
-    <button type="submit">View Details</button>
+
+<header class="site-header">
+    <h1>Groupie Tracker</h1>
+</header>
+
+<main>
+
+    <!-- Filters -->
+    <section class="filters-container">
+
+        <!-- Range 1: Creation date -->
+        <div class="filter-row">
+            <label for="creationDate">
+                Creation date <span>(1970 → Now)</span>
+            </label>
+            <input
+                type="range"
+                id="creationDate"
+                name="creationDate"
+                min="1958"
+                max="2026">
+        </div>
+
+        <!-- Range 2: First album date -->
+       <form action="/filter" method="get">
+    <!-- Range input -->
+    <label>Creation date</label>
+    <input type="range" name="creationFrom" min="1958" max="2026" value="1958">
+    <input type="range" name="creationTo" min="1958" max="2026" value="2026">
+
+    <!-- Checkbox group -->
+    <fieldset>
+        <legend>Number of members</legend>
+        <label><input type="checkbox" name="members" value="1">1</label>
+        <label><input type="checkbox" name="members" value="2">2</label>
+        <label><input type="checkbox" name="members" value="3">3</label>
+    </fieldset>
+
+    <button type="submit">Filter</button>
 </form>
 
-        </div>
+
+        <!-- Checkbox group 2: Locations -->
+        <fieldset class="filter-row checkbox">
+            <legend>Concert locations</legend>
+
+            <label>
+                <input type="checkbox" name="locations" value="available">
+                Has concert locations
+            </label>
+        </fieldset>
+
+    </section>
+
+    <!-- Artists -->
+    <section class="grid">
+        {{range .}}
+        <article class="artist">
+            <img src="{{.Image}}" alt="{{.Name}}">
+            <h3>{{.Name}}</h3>
+            <form action="/artist/{{.ID}}" method="get">
+                <button type="submit">View Details</button>
+            </form>
+        </article>
         {{end}}
-    </div>
+    </section>
+
+</main>
+
 </body>
 </html>
-

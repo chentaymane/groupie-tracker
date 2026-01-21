@@ -2,53 +2,74 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{.Artist.Name}} - groupie-tracker</title>
-        <link  href="/static/artist.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Artist.Name}} - Groupie Tracker</title>
 
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <div class="container">
-        <img src="{{.Artist.Image}}" alt="{{.Artist.Name}}">
-        <h1>{{.Artist.Name}}</h1>
-        
-        <div class="section">
-            <div class="section-title">Members</div>
-            {{range .Artist.Members}}
+
+<header class="site-header">
+    <h1>{{.Artist.Name}}</h1>
+</header>
+
+<main class="container">
+
+    <img src="{{.Artist.Image}}" alt="{{.Artist.Name}}">
+
+    <!-- Members -->
+    <section class="section">
+        <h2 class="section-title">Members</h2>
+        {{range .Artist.Members}}
             <div class="list-item">{{.}}</div>
-            {{end}}
-        </div>
+        {{end}}
+    </section>
 
-        <div class="section">
-            <div class="section-title">Band Information</div>
-            <div class="list-item"><strong>Creation Date:</strong> {{.Artist.CreationDate}}</div>
-            <div class="list-item"><strong>First Album:</strong> {{.Artist.FirstAlbum}}</div>
+    <!-- Band Info -->
+    <section class="section">
+        <h2 class="section-title">Band Information</h2>
+        <div class="list-item">
+            <strong>Creation Date:</strong> {{.Artist.CreationDate}}
         </div>
+        <div class="list-item">
+            <strong>First Album:</strong> {{.Artist.FirstAlbum}}
+        </div>
+    </section>
 
-        <div class="section">
-            <div class="section-title">Concert Relations</div>
-            {{range $place, $dates := .Relations}}
-            <div class="relation-item">
-                <div class="relation-place">{{$place}}</div>
-                <div class="relation-dates">{{range $dates}}{{.}} {{end}}</div>
+    <!-- Concert Relations -->
+    <section class="section">
+        <h2 class="section-title">Concert Relations</h2>
+        {{range $place, $dates := .Relations}}
+        <div class="relation-item">
+            <div class="relation-place">{{$place}}</div>
+            <div class="relation-dates">
+                {{range $dates}}{{.}} {{end}}
             </div>
-            {{end}}
         </div>
+        {{end}}
+    </section>
 
-        <div class="section">
-            <div class="section-title">Locations</div>
-            {{range .Locations}}
+    <!-- Locations -->
+    <section class="section">
+        <h2 class="section-title">Locations</h2>
+        {{range .Locations}}
             <div class="list-item">{{.}}</div>
-            {{end}}
-        </div>
+        {{end}}
+    </section>
 
-        <div class="section">
-            <div class="section-title">Dates</div>
-            {{range .Dates}}
+    <!-- Dates -->
+    <section class="section">
+        <h2 class="section-title">Dates</h2>
+        {{range .Dates}}
             <div class="list-item">{{.}}</div>
-            {{end}}
-        </div>
+        {{end}}
+    </section>
 
-        <a href="/" class="back-link">← Back to list</a>
-    </div>
+    <a href="/" class="back-link">← Back to list</a>
+
+</main>
+
 </body>
 </html>

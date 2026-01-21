@@ -16,6 +16,7 @@ func main() {
 	http.HandleFunc("/static/", zone.HandleStatic)
 	http.HandleFunc("/", zone.HandlerHome)
 	http.HandleFunc("/artist/", zone.HandlerArtist)
+	http.HandleFunc("/filter" , zone.HandleFilter)
 	fmt.Println("Server running on http://localhost:8080")
 	http.ListenAndServe(":8080", nil)
 }
