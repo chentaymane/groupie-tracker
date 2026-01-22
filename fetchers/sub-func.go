@@ -1,6 +1,8 @@
 package zone
 
-import "strings"
+import (
+	"strings"
+)
 
 // FormatDate removes leading asterisks from date strings
 func FormatDate(dates []string) []string {

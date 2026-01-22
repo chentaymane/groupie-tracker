@@ -1,83 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Groupie Tracker</title>
-
-    <link rel="stylesheet" href="/static/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Groupie Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
 <header class="site-header">
-    <h1>Groupie Tracker</h1>
+  <h1>Groupie Tracker</h1>
 </header>
 
 <main>
+  <!-- FILTERS -->
+  <section class="filters-container">
+    <form action="/filter" method="get" class="filter-form">
 
-    <!-- Filters -->
-    <section class="filters-container">
+      <!-- Location Search with live suggestions -->
+      <div class="filter-row">
+        <label for="searchLocation">Search Location</label>
+        <input type="text" id="searchLocation" name="searchLocation" placeholder="Type city or country..." autocomplete="off">
+        <div id="locationSuggestions" class="suggestions"></div>
+      </div>
 
-        <!-- Range 1: Creation date -->
-        <div class="filter-row">
-            <label for="creationDate">
-                Creation date <span>(1970 → Now)</span>
-            </label>
-            <input
-                type="range"
-                id="creationDate"
-                name="creationDate"
-                min="1958"
-                max="2026">
-        </div>
+      <!-- Creation Date Range -->
+      <div class="filter-row">
+        <label>Creation Date</label>
+        <input type="range" name="creationFrom" min="1958" max="2026" value="1958">
+        <input type="range" name="creationTo" min="1958" max="2026" value="2026">
+      </div>
 
-        <!-- Range 2: First album date -->
-       <form action="/filter" method="get">
-    <!-- Range input -->
-    <label>Creation date</label>
-    <input type="range" name="creationFrom" min="1958" max="2026" value="1958">
-    <input type="range" name="creationTo" min="1958" max="2026" value="2026">
+      <!-- First Album Date Range -->
+      <div class="filter-row">
+        <label>First Album Date</label>
+        <input type="range" name="firstFrom" min="1958" max="2026" value="1958">
+        <input type="range" name="firstTo" min="1958" max="2026" value="2026">
+      </div>
 
-    <!-- Checkbox group -->
-    <fieldset>
-        <legend>Number of members</legend>
+      <!-- Members Checkbox -->
+      <fieldset class="filter-row">
+        <legend>Number of Members</legend>
         <label><input type="checkbox" name="members" value="1">1</label>
         <label><input type="checkbox" name="members" value="2">2</label>
         <label><input type="checkbox" name="members" value="3">3</label>
-    </fieldset>
+        <label><input type="checkbox" name="members" value="4">4</label>
+      </fieldset>
 
-    <button type="submit">Filter</button>
-</form>
+      <!-- Buttons -->
+      <div class="filter-row buttons">
+        <button type="submit">Filter</button>
+        <a href="/" class="reset-link">Reset</a>
+      </div>
+    </form>
+  </section>
 
-
-        <!-- Checkbox group 2: Locations -->
-        <fieldset class="filter-row checkbox">
-            <legend>Concert locations</legend>
-
-            <label>
-                <input type="checkbox" name="locations" value="available">
-                Has concert locations
-            </label>
-        </fieldset>
-
-    </section>
-
-    <!-- Artists -->
-    <section class="grid">
-        {{range .}}
-        <article class="artist">
-            <img src="{{.Image}}" alt="{{.Name}}">
-            <h3>{{.Name}}</h3>
-            <form action="/artist/{{.ID}}" method="get">
-                <button type="submit">View Details</button>
-            </form>
-        </article>
-        {{end}}
-    </section>
-
+  <!-- ARTISTS GRID -->
+  <section class="grid">
+    {{range .}}
+    <article class="artist">
+      <img src="{{.Image}}" alt="{{.Name}}">
+      <h3>{{.Name}}</h3>
+      <form action="/artist/{{.ID}}" method="get">
+        <button type="submit">View Details</button>
+      </form>
+    </article>
+    {{end}}
+  </section>
 </main>
+
+
 
 </body>
 </html>
