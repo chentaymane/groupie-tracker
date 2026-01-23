@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
-	"strings"
 
 	zone "zone/fetchers"
 )
@@ -107,63 +106,11 @@ func HandleFilter(w http.ResponseWriter, r *http.Request) {
 		HandleError(w, http.StatusInternalServerError, "Template error")
 		return
 	}
-
+	
 	var buf bytes.Buffer
-	tmpl.Execute(&buf, data)
+	if err := tmpl.Execute(&buf, data); err != nil {
+		HandleError(w, http.StatusInternalServerError, "500 Internal Server Error")
+		return
+	}
 	buf.WriteTo(w)
-}
-
-func parseInt(value string, def int) int {
-	n, err := strconv.Atoi(value)
-	if err != nil {
-		return def
-	}
-	return n
-}
-
-func normalizeRange(min, max *int) {
-	if *max < *min {
-		*min, *max = *max, *min
-	}
-}
-
-func matchMembers(a zone.Artist, members []string) bool {
-	for _, m := range members {
-		n, _ := strconv.Atoi(m)
-		if len(a.Members) == n {
-			return true
-		}
-	}
-	return false
-}
-
-func FilterByLocation(artists []zone.Artist, search string) ([]zone.Artist, error) {
-	if search == "" {
-		return artists, nil
-	}
-
-	allLocations, err := zone.FetchAllLocations()
-	if err != nil {
-		return nil, err
-	}
-
-	locMap := make(map[int][]string)
-	for id, locs := range allLocations {
-		locMap[id] = locs
-	}
-
-	search = strings.ToLower(search)
-	var result []zone.Artist
-
-	for _, artist := range artists {
-		locations := locMap[artist.ID]
-		for _, loc := range locations {
-			if strings.Contains(strings.ToLower(loc), search) {
-				result = append(result, artist)
-				break
-			}
-		}
-	}
-
-	return result, nil
 }

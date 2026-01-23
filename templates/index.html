@@ -31,7 +31,7 @@
 
     <!-- Creation Date -->
     <div class="filter-group">
-      <label>Creation</label>
+      <label>Creation Date</label>
       <div class="range-group">
         <input type="range" name="creationFrom" min="1958" max="2026" value="{{.CreationFrom}}">
         <input type="range" name="creationTo" min="1958" max="2026" value="{{.CreationTo}}">
@@ -55,6 +55,10 @@
         <label><input type="checkbox" name="members" value="2" {{if index .MembersChecked 2}}checked{{end}}>2</label>
         <label><input type="checkbox" name="members" value="3" {{if index .MembersChecked 3}}checked{{end}}>3</label>
         <label><input type="checkbox" name="members" value="4" {{if index .MembersChecked 4}}checked{{end}}>4</label>
+              <label><input type="checkbox" name="members" value="5" {{if index .MembersChecked 5}}checked{{end}}>5</label>
+        <label><input type="checkbox" name="members" value="6" {{if index .MembersChecked 6}}checked{{end}}>6</label>
+        <label><input type="checkbox" name="members" value="7" {{if index .MembersChecked 7}}checked{{end}}>7</label>
+        <label><input type="checkbox" name="members" value="8" {{if index .MembersChecked 8}}checked{{end}}>8</label>
       </div>
     </div>
 

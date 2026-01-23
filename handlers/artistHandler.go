@@ -61,7 +61,7 @@ func HandlerArtist(w http.ResponseWriter, r *http.Request) {
 		HandleError(w, http.StatusInternalServerError, "500 Internal Server Error")
 		return
 	}
-	dates = zone.FormatDate(dates)
+	dates = FormatDate(dates)
 	relations, err := zone.FetchRelations(artist.ID)
 	if err != nil {
 		HandleError(w, http.StatusInternalServerError, "500 Internal Server Error")
