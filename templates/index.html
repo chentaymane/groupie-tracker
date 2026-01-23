@@ -16,49 +16,61 @@
 <main>
   <!-- FILTERS -->
   <section class="filters-container">
-    <form action="/filter" method="get" class="filter-form">
+  <form action="/filter" method="get" class="filter-bar">
 
-      <!-- Location Search with live suggestions -->
-      <div class="filter-row">
-        <label for="searchLocation">Search Location</label>
-        <input type="text" id="searchLocation" name="searchLocation" placeholder="Type city or country..." autocomplete="off">
-        <div id="locationSuggestions" class="suggestions"></div>
+    <!-- Search -->
+    <div class="filter-group search">
+      <label>Location</label>
+      <input
+        type="text"
+        name="searchLocation"
+        placeholder="City or country..."
+        value="{{.LocationSearch}}"
+      >
+    </div>
+
+    <!-- Creation Date -->
+    <div class="filter-group">
+      <label>Creation</label>
+      <div class="range-group">
+        <input type="range" name="creationFrom" min="1958" max="2026" value="{{.CreationFrom}}">
+        <input type="range" name="creationTo" min="1958" max="2026" value="{{.CreationTo}}">
       </div>
+    </div>
 
-      <!-- Creation Date Range -->
-      <div class="filter-row">
-        <label>Creation Date</label>
-        <input type="range" name="creationFrom" min="1958" max="2026" value="1958">
-        <input type="range" name="creationTo" min="1958" max="2026" value="2026">
+    <!-- First Album -->
+    <div class="filter-group">
+      <label>First Album</label>
+      <div class="range-group">
+        <input type="range" name="firstFrom" min="1958" max="2026" value="{{.FirstFrom}}">
+        <input type="range" name="firstTo" min="1958" max="2026" value="{{.FirstTo}}">
       </div>
+    </div>
 
-      <!-- First Album Date Range -->
-      <div class="filter-row">
-        <label>First Album Date</label>
-        <input type="range" name="firstFrom" min="1958" max="2026" value="1958">
-        <input type="range" name="firstTo" min="1958" max="2026" value="2026">
+    <!-- Members -->
+    <div class="filter-group members">
+      <label>Members</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="members" value="1" {{if index .MembersChecked 1}}checked{{end}}>1</label>
+        <label><input type="checkbox" name="members" value="2" {{if index .MembersChecked 2}}checked{{end}}>2</label>
+        <label><input type="checkbox" name="members" value="3" {{if index .MembersChecked 3}}checked{{end}}>3</label>
+        <label><input type="checkbox" name="members" value="4" {{if index .MembersChecked 4}}checked{{end}}>4</label>
       </div>
+    </div>
 
-      <!-- Members Checkbox -->
-      <fieldset class="filter-row">
-        <legend>Number of Members</legend>
-        <label><input type="checkbox" name="members" value="1">1</label>
-        <label><input type="checkbox" name="members" value="2">2</label>
-        <label><input type="checkbox" name="members" value="3">3</label>
-        <label><input type="checkbox" name="members" value="4">4</label>
-      </fieldset>
+    <!-- Actions -->
+    <div class="filter-actions">
+      <button type="submit">Apply</button>
+      <a href="/" class="reset-link">Reset</a>
+    </div>
 
-      <!-- Buttons -->
-      <div class="filter-row buttons">
-        <button type="submit">Filter</button>
-        <a href="/" class="reset-link">Reset</a>
-      </div>
-    </form>
-  </section>
+  </form>
+</section>
+
 
   <!-- ARTISTS GRID -->
   <section class="grid">
-    {{range .}}
+    {{range .Artists}}
     <article class="artist">
       <img src="{{.Image}}" alt="{{.Name}}">
       <h3>{{.Name}}</h3>
@@ -69,8 +81,6 @@
     {{end}}
   </section>
 </main>
-
-
 
 </body>
 </html>

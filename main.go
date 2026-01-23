@@ -13,7 +13,6 @@ import (
 
 // The main function
 func main() {
-	http.HandleFunc("/locations", zone.HandlerLocations)
 
 	http.HandleFunc("/static/", zone.HandleStatic)
 	http.HandleFunc("/", zone.HandlerHome)

@@ -10,6 +10,12 @@ import (
 type Locations struct {
 	Locations []string `json:"locations"`
 }
+type AllLocations struct {
+	Index []struct {
+		ID        int      `json:"id"`
+		Locations []string `json:"locations"`
+	} `json:"index"`
+}
 
 // FetchLocation retrieves the locations for a given artist ID from the external API
 func FetchLocation(id int) ([]string, error) {
@@ -27,4 +33,25 @@ func FetchLocation(id int) ([]string, error) {
 	}
 
 	return rel.Locations, nil
+}
+func FetchAllLocations() (map[int][]string, error) {
+	url := "https://groupietrackers.herokuapp.com/api/locations"
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var data AllLocations
+	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
+		return nil, err
+	}
+
+	// map artistID → locations
+	result := make(map[int][]string)
+	for _, item := range data.Index {
+		result[item.ID] = item.Locations
+	}
+
+	return result, nil
 }

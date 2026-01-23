@@ -8,7 +8,6 @@ import (
 	zone "zone/fetchers"
 )
 
-// HandlerHome serves the home page with a list of artists
 func HandlerHome(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		HandleError(w, http.StatusNotFound, "Page not found")
@@ -21,10 +20,19 @@ func HandlerHome(w http.ResponseWriter, r *http.Request) {
 	}
 
 	artists, err := zone.FetchArtists()
-	
 	if err != nil {
 		HandleError(w, http.StatusInternalServerError, "500 Internal Server Error")
 		return
+	}
+
+	data := FilterViewData{
+		Artists:        artists,
+		CreationFrom:   1958,
+		CreationTo:     2026,
+		FirstFrom:      1958,
+		FirstTo:        2026,
+		MembersChecked: make(map[int]bool),
+		LocationSearch: "",
 	}
 
 	tmpl, err := template.ParseFiles("templates/index.html")
@@ -34,7 +42,7 @@ func HandlerHome(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var buf bytes.Buffer
-	if err := tmpl.Execute(&buf, artists); err != nil {
+	if err := tmpl.Execute(&buf, data); err != nil {
 		HandleError(w, http.StatusInternalServerError, "500 Internal Server Error")
 		return
 	}
