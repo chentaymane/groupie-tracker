@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+	"strings"
 
 	zone "zone/fetchers"
 )
@@ -19,7 +20,7 @@ type FilterViewData struct {
 
 	MembersChecked map[int]bool
 	LocationSearch string
-	Locations   []string
+	Locations      []string
 }
 
 func HandleFilter(w http.ResponseWriter, r *http.Request) {
@@ -40,6 +41,9 @@ func HandleFilter(w http.ResponseWriter, r *http.Request) {
 	firstTo := parseInt(r.FormValue("firstTo"), 2026)
 	membersChecked := r.Form["members"]
 	locationSearch := r.FormValue("searchLocation")
+	if strings.HasSuffix(locationSearch, "- location") {
+		locationSearch = strings.TrimSpace(locationSearch[:len("- location")])
+	}
 
 	normalizeRange(&creationFrom, &creationTo)
 	normalizeRange(&firstFrom, &firstTo)

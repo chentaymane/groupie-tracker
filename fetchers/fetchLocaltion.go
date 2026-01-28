@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 // Locations represents the structure of the location data from the API
@@ -62,7 +63,8 @@ func Getallolocations(locations map[int][]string) []string {
 	for _, location := range locations {
 		for _, l := range location {
 			if checkrepeat(allloct, l) {
-				allloct = append(allloct, l)
+				l = strings.ReplaceAll(l,"-"," ")
+				allloct = append(allloct, l+"- location")
 			}
 		}
 	}
