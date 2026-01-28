@@ -34,6 +34,7 @@ func FetchLocation(id int) ([]string, error) {
 
 	return rel.Locations, nil
 }
+
 func FetchAllLocations() (map[int][]string, error) {
 	url := "https://groupietrackers.herokuapp.com/api/locations"
 	resp, err := http.Get(url)
@@ -54,4 +55,12 @@ func FetchAllLocations() (map[int][]string, error) {
 	}
 
 	return result, nil
+}
+
+func Getallolocations(locations map[int][]string) []string {
+	var allloct []string
+	for _, location := range locations {
+		allloct = append(allloct, location...)
+	}
+	return allloct
 }

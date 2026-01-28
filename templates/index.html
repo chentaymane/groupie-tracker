@@ -26,7 +26,14 @@
         name="searchLocation"
         placeholder="City or country..."
         value="{{.LocationSearch}}"
+        list="suggestions"
       >
+
+<datalist id="suggestions">
+  {{range .Locations}}
+  <option value="{{.}}">
+ {{end}}
+</datalist>
     </div>
 
     <!-- Creation Date -->

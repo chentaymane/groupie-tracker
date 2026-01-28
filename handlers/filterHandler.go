@@ -19,6 +19,7 @@ type FilterViewData struct {
 
 	MembersChecked map[int]bool
 	LocationSearch string
+	Locations   []string
 }
 
 func HandleFilter(w http.ResponseWriter, r *http.Request) {
@@ -106,7 +107,7 @@ func HandleFilter(w http.ResponseWriter, r *http.Request) {
 		HandleError(w, http.StatusInternalServerError, "Template error")
 		return
 	}
-	
+
 	var buf bytes.Buffer
 	if err := tmpl.Execute(&buf, data); err != nil {
 		HandleError(w, http.StatusInternalServerError, "500 Internal Server Error")

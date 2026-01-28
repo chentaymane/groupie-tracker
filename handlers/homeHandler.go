@@ -24,7 +24,7 @@ func HandlerHome(w http.ResponseWriter, r *http.Request) {
 		HandleError(w, http.StatusInternalServerError, "500 Internal Server Error")
 		return
 	}
-
+	locations, err := zone.FetchAllLocations()
 	data := FilterViewData{
 		Artists:        artists,
 		CreationFrom:   1958,
@@ -33,6 +33,7 @@ func HandlerHome(w http.ResponseWriter, r *http.Request) {
 		FirstTo:        2026,
 		MembersChecked: make(map[int]bool),
 		LocationSearch: "",
+		Locations:      zone.Getallolocations(locations),
 	}
 
 	tmpl, err := template.ParseFiles("templates/index.html")
