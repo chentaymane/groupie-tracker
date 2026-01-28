@@ -60,7 +60,20 @@ func FetchAllLocations() (map[int][]string, error) {
 func Getallolocations(locations map[int][]string) []string {
 	var allloct []string
 	for _, location := range locations {
-		allloct = append(allloct, location...)
+		for _, l := range location {
+			if checkrepeat(allloct, l) {
+				allloct = append(allloct, l)
+			}
+		}
 	}
 	return allloct
+}
+
+func checkrepeat(locations []string, l string) bool {
+	for _, s := range locations {
+		if s == l {
+			return false
+		}
+	}
+	return true
 }
