@@ -12,8 +12,14 @@ type Dates struct {
 	Dates []string `json:"dates"`
 }
 
+var datesCache []string
+
 // FetchDate retrieves the dates for a given artist ID from the external API
 func FetchDate(id int) ([]string, error) {
+	if datesCache != nil {
+		return datesCache, nil
+	}
+
 	url := "https://groupietrackers.herokuapp.com/api/dates/" + strconv.Itoa(id)
 
 	resp, err := http.Get(url)
@@ -28,5 +34,6 @@ func FetchDate(id int) ([]string, error) {
 		return nil, err
 	}
 
+	datesCache = data.Dates
 	return data.Dates, nil
 }

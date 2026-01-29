@@ -81,6 +81,5 @@ This project is for educational purposes only.
 
 ## Authors
 
-- bguitoni  - [GitHub](https://github.com/Badrone7) - [Gitea](https://learn.zone01oujda.ma/git/bguitoni)
-- halhyane  - [GitHub](https://github.com/Houssam-Alhyane) - [Gitea](https://learn.zone01oujda.ma/git/halhyane)
+- mbelhouss  - [GitHub](https://github.com/DissonantVoid) - [Gitea](https://learn.zone01oujda.ma/git/mbelhouss)
 - achent  - [GitHub](https://github.com/chentaymane) - [Gitea](https://learn.zone01oujda.ma/git/achent)

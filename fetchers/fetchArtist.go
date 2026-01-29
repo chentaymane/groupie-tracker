@@ -17,8 +17,14 @@ type Artist struct {
 	FirstAlbum   string   `json:"firstAlbum"`
 }
 
+var artistsCache []Artist
+
 // FetchARtists retrieves the list of artists from the public API
 func FetchArtists() ([]Artist, error) {
+	if artistsCache != nil {
+		return artistsCache, nil
+	}
+
 	resp, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
 	if err != nil {
 		return nil, err
@@ -27,6 +33,8 @@ func FetchArtists() ([]Artist, error) {
 
 	var artists []Artist
 	err = json.NewDecoder(resp.Body).Decode(&artists)
+
+	artistsCache = artists
 	return artists, err
 }
 

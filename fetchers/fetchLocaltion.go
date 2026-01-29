@@ -3,7 +3,6 @@ package zone
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 	"strings"
 )
 
@@ -18,25 +17,23 @@ type AllLocations struct {
 	} `json:"index"`
 }
 
+var locationsCache map[int][]string
+
 // FetchLocation retrieves the locations for a given artist ID from the external API
 func FetchLocation(id int) ([]string, error) {
-	relationsURL := "https://groupietrackers.herokuapp.com/api/locations/"
-	resp, err := http.Get(relationsURL + strconv.Itoa(id))
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	var rel Locations
-	err = json.NewDecoder(resp.Body).Decode(&rel)
+	locations, err := FetchAllLocations()
 	if err != nil {
 		return nil, err
 	}
 
-	return rel.Locations, nil
+	return locations[id], nil
 }
 
 func FetchAllLocations() (map[int][]string, error) {
+	if locationsCache != nil {
+		return locationsCache, nil
+	}
+
 	url := "https://groupietrackers.herokuapp.com/api/locations"
 	resp, err := http.Get(url)
 	if err != nil {
@@ -55,6 +52,7 @@ func FetchAllLocations() (map[int][]string, error) {
 		result[item.ID] = item.Locations
 	}
 
+	locationsCache = result
 	return result, nil
 }
 

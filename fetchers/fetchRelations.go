@@ -12,8 +12,14 @@ type Relations struct {
 	DatesLocations map[string][]string `json:"datesLocations"`
 }
 
+var relationsCache map[string][]string
+
 // FetchRelations retrieves the dates and locations for a given artist ID from the external API
 func FetchRelations(id int) (map[string][]string, error) {
+	if relationsCache != nil {
+		return relationsCache, nil
+	}
+
 	url := "https://groupietrackers.herokuapp.com/api/relation/" + strconv.Itoa(id)
 
 	resp, err := http.Get(url)
@@ -26,8 +32,9 @@ func FetchRelations(id int) (map[string][]string, error) {
 	var data Relations
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 
+	relationsCache = data.DatesLocations
 	return data.DatesLocations, nil
 }
