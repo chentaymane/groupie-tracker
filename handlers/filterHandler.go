@@ -32,57 +32,58 @@ func HandleFilter(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Search := r.FormValue("searchLocation")
-	filtered := []zone.Artist{}
-	validFilter := true
+	search := strings.TrimSpace(r.FormValue("searchLocation"))
+	filtered := artists
+	validFilter := false
 
-	// validate filter
-	for {
-		if Search != "" {
-			validFilter = false
-			break
-		}
+	if search != "" {
+		parts := strings.Split(search, "-")
+		if len(parts) == 2 {
+			query := strings.TrimSpace(parts[0])
+			filterType := strings.ToLower(strings.TrimSpace(parts[1]))
 
-		split := strings.Split(Search, "-")
-		if len(split) != 2 {
-			validFilter = false
-			break
-		}
-		query := strings.TrimSpace(split[0])
-		queryType := strings.TrimSpace(split[1])
+			switch filterType {
+			case "location":
+				filtered, err = FilterByLocation(artists, query)
+				if err != nil {
+					HandleError(w, http.StatusInternalServerError, "Internal Server Error")
+					return
+				}
+				validFilter = true
 
-		switch queryType {
-		case "location":
-			filtered, err = FilterByLocation(artists, query)
-			if err != nil {
-				HandleError(w, http.StatusInternalServerError, "Internal Server Error")
-				return
+			case "artist":
+				filtered = zone.FilterByName(artists, query)
+				validFilter = true
+
+			case "member":
+				filtered = zone.FilterByMember(artists, query)
+				validFilter = true
+
+			case "first album":
+				filtered = zone.FilterByFirstAlbum(artists, query)
+				validFilter = true
+
+			case "creation date":
+				filtered = zone.FilterByCreationDate(artists, query)
+				validFilter = true
 			}
-
-		case "artist":
-			filtered = zone.FilterByName(artists, query)
-
-		case "member":
-		case "first album":
-		case "creation date":
-			// TODO...
-
-		default:
-			// invalid type
-			validFilter = false
 		}
-
-		break
 	}
 
 	data := FilterViewData{
-		Artists: artists, // default
-
-		LocationSearch: Search,
+		Artists:         artists,
+		LocationSearch:  search,
+		Locations:       zone.Getallolocations(),
+		ArtistNames:     zone.GetAllNameOfAtrtist(),
+		MemberNames:     zone.GetAllMemberNames(),
+		FirstAlbumDates: zone.GetAllFirstAlbumDates(),
+		CreationDates:   zone.GetAllCreationDates(),
 	}
 
 	if validFilter {
 		data.Artists = filtered
+	}else {
+		data.Artists = []zone.Artist{}
 	}
 
 	tmpl, err := template.ParseFiles("templates/index.html")

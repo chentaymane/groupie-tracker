@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Groupie Tracker</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/style.css">
 </head>
@@ -14,70 +15,96 @@
 </header>
 
 <main>
-  <!-- FILTERS -->
+
+  <!-- FILTER BAR -->
   <section class="filters-container">
-  <form action="/filter" method="get" class="filter-bar">
+    <form action="/filter" method="get" class="filter-bar">
 
-    <!-- Search -->
-    <div class="filter-group search">
-      <label>Location</label>
-      <input
-        type="text"
-        name="searchLocation"
-        placeholder="City or country..."
-        value="{{.LocationSearch}}"
-        list="suggestions"
-      >
+      <!-- SEARCH -->
+      <div class="filter-group search">
+        <label>Search</label>
 
-<datalist id="suggestions">
-  {{range .Locations}}
-    <option value="{{.}}">
-  {{end}}
-  
-  {{range .ArtistNames}}
-    <option value="{{.}}">
-  {{end}}
-  
-  {{range .MemberNames}}
-    <option value="{{.}}"></option>
-  {{end}}
+        <!-- Visible input (autocomplete only) -->
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="City, artist, member..."
+          list="suggestions"
+          autocomplete="off"
+        >
 
-  {{range .FirstAlbumDates}}
-    <option value="{{.}}"></option>
-  {{end}}
+        <!-- Real value sent to backend -->
+        <input
+          type="hidden"
+          name="searchLocation"
+          id="searchValue"
+          value="{{.LocationSearch}}"
+        >
 
-  {{range .CreationDates}}
-    <option value="{{.}}"></option>
-  {{end}}
+        <!-- Suggestions -->
+        <datalist id="suggestions">
 
-</datalist>
-    </div>
+          {{range .Locations}}
+            <option value="{{.}}">
+          {{end}}
 
-   
+          {{range .ArtistNames}}
+            <option value="{{.}}">
+          {{end}}
 
-    <!-- Actions -->
-    <div class="filter-actions">
-      <button type="submit">Apply</button>
-      <a href="/" class="reset-link">Reset</a>
-    </div>
+          {{range .MemberNames}}
+            <option value="{{.}}">
+          {{end}}
 
-  </form>
-</section>
+          {{range .FirstAlbumDates}}
+            <option value="{{.}}">
+          {{end}}
 
+          {{range .CreationDates}}
+            <option value="{{.}}">
+          {{end}}
+
+        </datalist>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="filter-actions">
+        <button type="submit">Apply</button>
+        <a href="/" class="reset-link">Reset</a>
+      </div>
+
+    </form>
+  </section>
 
   <!-- ARTISTS GRID -->
   <section class="grid">
     {{range .Artists}}
-    <article class="artist">
-      <img src="{{.Image}}" alt="{{.Name}}">
-      <h3>{{.Name}}</h3>
-      <form action="/artist/{{.ID}}" method="get">
-        <button type="submit">View Details</button>
-      </form>
-    </article>
+      <article class="artist">
+        <img src="{{.Image}}" alt="{{.Name}}">
+        <h3>{{.Name}}</h3>
+
+        <form action="/artist/{{.ID}}" method="get">
+          <button type="submit">View Details</button>
+        </form>
+      </article>
     {{end}}
   </section>
+
 </main>
+
+<!-- JS -->
+<script>
+const input = document.getElementById("searchInput");
+const hidden = document.getElementById("searchValue");
+
+// sync visible input → hidden input
+input.addEventListener("input", () => {
+  hidden.value = input.value;
+});
+
+// keep value after submit (optional UX)
+hidden.value && (input.value = hidden.value);
+</script>
 
 </body>
 </html>

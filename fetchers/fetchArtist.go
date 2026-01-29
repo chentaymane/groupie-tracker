@@ -87,3 +87,38 @@ func GetAllCreationDates() []string {
 	}
 	return dates
 }
+
+func FilterByMember(artists []Artist, member string) []Artist {
+	member = strings.ToLower(member)
+	var res []Artist
+
+	for _, a := range artists {
+		for _, m := range a.Members {
+			if strings.Contains(strings.ToLower(m), member) {
+				res = append(res, a)
+				break
+			}
+		}
+	}
+	return res
+}
+
+func FilterByFirstAlbum(artists []Artist, year string) []Artist {
+	var res []Artist
+	for _, a := range artists {
+		if strings.Contains(a.FirstAlbum, year) {
+			res = append(res, a)
+		}
+	}
+	return res
+}
+
+func FilterByCreationDate(artists []Artist, year string) []Artist {
+	var res []Artist
+	for _, a := range artists {
+		if strconv.Itoa(a.CreationDate) == year {
+			res = append(res, a)
+		}
+	}
+	return res
+}
