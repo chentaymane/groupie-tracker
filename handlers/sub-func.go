@@ -14,11 +14,9 @@ func FormatDate(dates []string) []string {
 	return dates
 }
 
-func FilterByLocation(artists []zone.Artist, search string) ([]zone.Artist, error) {
-	allLocations, err := zone.FetchAllLocations()
-	if err != nil {
-		return nil, err
-	}
+func FilterByLocation(artists []zone.Artist, search string) ([]zone.Artist,) {
+	allLocations, _ := zone.FetchAllLocations()
+
 
 	search = strings.ToLower(search)
 	var result []zone.Artist
@@ -35,5 +33,5 @@ func FilterByLocation(artists []zone.Artist, search string) ([]zone.Artist, erro
 		}
 	}
 
-	return result, nil
+	return result
 }

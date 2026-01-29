@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"net/http"
 	"strings"
-
 	zone "zone/fetchers"
 )
 
@@ -32,61 +31,21 @@ func HandleFilter(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	search := strings.TrimSpace(r.FormValue("searchLocation"))
-	filtered := artists
-	validFilter := false
+	search := strings.ToLower(strings.TrimSpace(r.FormValue("searchLocation")))
 
-	search = strings.ToLower(search) // case insensitive
-
+	var filtered []zone.Artist
 	if search != "" {
-		lastDash := strings.LastIndex(search, "-")
-
-		if lastDash != -1 {
-			query := strings.TrimSpace(search[:lastDash])
-			filterType := strings.TrimSpace(search[lastDash+1:])
-
-			switch filterType {
-			case "location":
-				filtered, err = FilterByLocation(artists, query)
-				if err != nil {
-					HandleError(w, http.StatusInternalServerError, "Internal Server Error")
-					return
-				}
-				validFilter = true
-
-			case "artist/band":
-				filtered = zone.FilterByName(artists, query)
-				validFilter = true
-
-			case "member":
-				filtered = zone.FilterByMember(artists, query)
-				validFilter = true
-
-			case "first album":
-				filtered = zone.FilterByFirstAlbum(artists, query)
-				validFilter = true
-
-			case "creation date":
-				filtered = zone.FilterByCreationDate(artists, query)
-				validFilter = true
-			}
-		}
+		filtered = SearchEverywhere(artists, search)
 	}
 
 	data := FilterViewData{
-		Artists:         artists,
+		Artists:         filtered,
 		LocationSearch:  search,
 		Locations:       zone.Getallolocations(),
 		ArtistNames:     zone.GetAllNameOfAtrtist(),
 		MemberNames:     zone.GetAllMemberNames(),
 		FirstAlbumDates: zone.GetAllFirstAlbumDates(),
 		CreationDates:   zone.GetAllCreationDates(),
-	}
-
-	if validFilter {
-		data.Artists = filtered
-	} else {
-		data.Artists = []zone.Artist{}
 	}
 
 	tmpl, err := template.ParseFiles("templates/index.html")
@@ -101,4 +60,30 @@ func HandleFilter(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	buf.WriteTo(w)
+}
+
+func SearchEverywhere(artists []zone.Artist, query string) []zone.Artist {
+	out := make(chan []zone.Artist, 5)
+
+	go func() { out <- zone.FilterByName(artists, query) }()
+	go func() { out <- zone.FilterByMember(artists, query) }()
+	go func() { out <- FilterByLocation(artists, query) }()
+	go func() { out <- zone.FilterByFirstAlbum(artists, query) }()
+	go func() { out <- zone.FilterByCreationDate(artists, query) }()
+
+	unique := make(map[int]zone.Artist)
+
+	for i := 0; i < 5; i++ {
+		results := <-out
+		for _, a := range results {
+			unique[a.ID] = a
+		}
+	}
+
+	var merged []zone.Artist
+	for _, a := range unique {
+		merged = append(merged, a)
+	}
+
+	return merged
 }
