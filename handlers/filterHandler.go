@@ -13,6 +13,7 @@ type FilterViewData struct {
 	Artists        []zone.Artist
 	LocationSearch string
 	Locations      []string
+	Names          []string
 }
 
 func HandleFilter(w http.ResponseWriter, r *http.Request) {
@@ -27,26 +28,33 @@ func HandleFilter(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	locationSearch := r.FormValue("searchLocation")
-	if strings.HasSuffix(locationSearch, "- location") {
-		locationSearch = strings.TrimSuffix(locationSearch, "- location")
-	}
+	Search := r.FormValue("searchLocation")
 	filtered := []zone.Artist{}
 	choseFilter := false
+	if Search != "" {
+		if strings.HasSuffix(Search, " - location") {
+			choseFilter = true
+			Search = strings.TrimSuffix(Search, " - location")
 
-	if locationSearch != "" {
-		choseFilter = true
-		filtered, err = FilterByLocation(artists, locationSearch)
-		if err != nil {
-			HandleError(w, http.StatusInternalServerError, "Internal Server Error")
-			return
+			filtered, err = FilterByLocation(artists, Search)
+			if err != nil {
+				HandleError(w, http.StatusInternalServerError, "Internal Server Error")
+				return
+			}
+
+		} else if strings.HasSuffix(Search, " - member") {
+			choseFilter = true
+			Search = strings.TrimSuffix(Search, " - member")
+
+			filtered = zone.FilterByName(artists, Search)
+
 		}
 	}
 
 	data := FilterViewData{
 		Artists: artists, // default
 
-		LocationSearch: locationSearch,
+		LocationSearch: Search,
 	}
 
 	if choseFilter {

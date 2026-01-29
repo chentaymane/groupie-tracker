@@ -58,21 +58,22 @@ func FetchAllLocations() (map[int][]string, error) {
 	return result, nil
 }
 
-func Getallolocations(locations map[int][]string) []string {
+func Getallolocations() []string {
+	locations ,_:= FetchAllLocations()
 	var allloct []string
 	for _, location := range locations {
 		for _, l := range location {
 			if checkrepeat(allloct, l) {
 				l = strings.ReplaceAll(l, "-", " ")
-				allloct = append(allloct, l+"- location")
+				allloct = append(allloct, l+" - location")
 			}
 		}
 	}
 	return allloct
 }
 
-func checkrepeat(locations []string, l string) bool {
-	for _, s := range locations {
+func checkrepeat(Any []string, l string) bool {
+	for _, s := range Any {
 		if s == l {
 			return false
 		}
