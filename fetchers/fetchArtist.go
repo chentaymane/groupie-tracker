@@ -34,8 +34,8 @@ func GetAllNameOfAtrtist() []string {
 	Artists, _ := FetchArtists()
 	artistsNames := []string{}
 	for _, r := range Artists {
-		if checkrepeat(artistsNames, r.Name) {
-			artistsNames = append(artistsNames, r.Name+" - artist")
+		if checkrepeat(artistsNames, r.Name+" - artist/band") {
+			artistsNames = append(artistsNames, r.Name+" - artist/band")
 		}
 	}
 	return artistsNames
@@ -57,7 +57,7 @@ func GetAllMemberNames() []string {
 	memberNames := []string{}
 	for _, r := range Artists {
 		for _, m := range r.Members {
-			if checkrepeat(memberNames, m) {
+			if checkrepeat(memberNames, m+" - member") {
 				memberNames = append(memberNames, m+" - member")
 			}
 		}
@@ -69,7 +69,7 @@ func GetAllFirstAlbumDates() []string {
 	Artists, _ := FetchArtists()
 	dates := []string{}
 	for _, r := range Artists {
-		if checkrepeat(dates, r.FirstAlbum) {
+		if checkrepeat(dates, r.FirstAlbum+" - first album") {
 			dates = append(dates, r.FirstAlbum+" - first album")
 		}
 	}
@@ -81,7 +81,7 @@ func GetAllCreationDates() []string {
 	dates := []string{}
 	for _, r := range Artists {
 		creationDateStr := strconv.Itoa(r.CreationDate)
-		if checkrepeat(dates, creationDateStr) {
+		if checkrepeat(dates, creationDateStr+" - creation date") {
 			dates = append(dates, creationDateStr+" - creation date")
 		}
 	}

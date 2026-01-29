@@ -23,21 +23,11 @@
       <!-- SEARCH -->
       <div class="filter-group search">
         <label>Search</label>
-
-        <!-- Visible input (autocomplete only) -->
         <input
           type="text"
-          id="searchInput"
-          placeholder="City, artist, member..."
           list="suggestions"
-          autocomplete="off"
-        >
-
-        <!-- Real value sent to backend -->
-        <input
-          type="hidden"
           name="searchLocation"
-          id="searchValue"
+          placeholder="City, artist, member..."
           value="{{.LocationSearch}}"
         >
 
@@ -92,19 +82,6 @@
 
 </main>
 
-<!-- JS -->
-<script>
-const input = document.getElementById("searchInput");
-const hidden = document.getElementById("searchValue");
-
-// sync visible input → hidden input
-input.addEventListener("input", () => {
-  hidden.value = input.value;
-});
-
-// keep value after submit (optional UX)
-hidden.value && (input.value = hidden.value);
-</script>
 
 </body>
 </html>

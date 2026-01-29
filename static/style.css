@@ -42,9 +42,10 @@ body {
 }
 
 .filter-bar {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1.5rem;
+  align-items: flex-end;
 }
 
 /* Individual filter block */
@@ -52,6 +53,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  flex: 1;
+  min-width: 220px;
 }
 
 .filter-group label {
@@ -59,13 +62,13 @@ body {
   color: #b5bac1;
 }
 
-/* Search input */
+/* Search input - WHITE BACKGROUND */
 input[type="text"] {
-  background-color: #0f1117;
+  background-color: #ffffff;
   border: 1px solid #2a2d35;
   border-radius: 8px;
   padding: 0.6rem 0.7rem;
-  color: #e4e6eb;
+  color: #0f1117;
 }
 
 input[type="text"]::placeholder {
@@ -143,14 +146,14 @@ input[type="checkbox"] {
 }
 
 /* =========================
-   ARTIST GRID
+   ARTIST GRID (FLEXBOX)
 ========================= */
 .grid {
   max-width: 1200px;
   margin: 2rem auto;
   padding: 0 1rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1.5rem;
 }
 
@@ -161,6 +164,8 @@ input[type="checkbox"] {
   padding: 1rem;
   text-align: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex: 1 1 220px;
+  max-width: 280px;
 }
 
 .artist:hover {
@@ -218,10 +223,10 @@ input[type="checkbox"] {
   margin-bottom: 1rem;
 }
 
-/* Info blocks */
+/* Info blocks (FLEXBOX) */
 .info {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
@@ -231,6 +236,7 @@ input[type="checkbox"] {
   padding: 0.8rem;
   border-radius: 8px;
   font-size: 0.9rem;
+  flex: 1 1 200px;
 }
 
 .info-item span {
