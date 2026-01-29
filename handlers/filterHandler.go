@@ -12,8 +12,12 @@ import (
 type FilterViewData struct {
 	Artists        []zone.Artist
 	LocationSearch string
-	Locations      []string
-	Names          []string
+
+	Locations       []string
+	ArtistNames     []string
+	MemberNames     []string
+	FirstAlbumDates []string
+	CreationDates   []string
 }
 
 func HandleFilter(w http.ResponseWriter, r *http.Request) {
@@ -30,25 +34,45 @@ func HandleFilter(w http.ResponseWriter, r *http.Request) {
 
 	Search := r.FormValue("searchLocation")
 	filtered := []zone.Artist{}
-	choseFilter := false
-	if Search != "" {
-		if strings.HasSuffix(Search, " - location") {
-			choseFilter = true
-			Search = strings.TrimSuffix(Search, " - location")
+	validFilter := true
 
-			filtered, err = FilterByLocation(artists, Search)
+	// validate filter
+	for {
+		if Search != "" {
+			validFilter = false
+			break
+		}
+
+		split := strings.Split(Search, "-")
+		if len(split) != 2 {
+			validFilter = false
+			break
+		}
+		query := strings.TrimSpace(split[0])
+		queryType := strings.TrimSpace(split[1])
+
+		switch queryType {
+		case "location":
+			filtered, err = FilterByLocation(artists, query)
 			if err != nil {
 				HandleError(w, http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
 
-		} else if strings.HasSuffix(Search, " - member") {
-			choseFilter = true
-			Search = strings.TrimSuffix(Search, " - member")
+		case "artist":
+			filtered = zone.FilterByName(artists, query)
 
-			filtered = zone.FilterByName(artists, Search)
+		case "member":
+		case "first album":
+		case "creation date":
+			// TODO...
 
+		default:
+			// invalid type
+			validFilter = false
 		}
+
+		break
 	}
 
 	data := FilterViewData{
@@ -57,7 +81,7 @@ func HandleFilter(w http.ResponseWriter, r *http.Request) {
 		LocationSearch: Search,
 	}
 
-	if choseFilter {
+	if validFilter {
 		data.Artists = filtered
 	}
 

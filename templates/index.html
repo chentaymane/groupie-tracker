@@ -31,11 +31,25 @@
 
 <datalist id="suggestions">
   {{range .Locations}}
-  <option value="{{.}}">
- {{end}}
-   {{range .Names}}
-  <option value="{{.}}">
- {{end}}
+    <option value="{{.}}">
+  {{end}}
+  
+  {{range .ArtistNames}}
+    <option value="{{.}}">
+  {{end}}
+  
+  {{range .MemberNames}}
+    <option value="{{.}}"></option>
+  {{end}}
+
+  {{range .FirstAlbumDates}}
+    <option value="{{.}}"></option>
+  {{end}}
+
+  {{range .CreationDates}}
+    <option value="{{.}}"></option>
+  {{end}}
+
 </datalist>
     </div>
 

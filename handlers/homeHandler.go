@@ -28,8 +28,11 @@ func HandlerHome(w http.ResponseWriter, r *http.Request) {
 	data := FilterViewData{
 		Artists: artists,
 
-		Locations: zone.Getallolocations(),
-		Names:     zone.GetAllNameOfAtrtist(),
+		Locations:       zone.Getallolocations(),
+		ArtistNames:     zone.GetAllNameOfAtrtist(),
+		MemberNames:     zone.GetAllMemberNames(),
+		FirstAlbumDates: zone.GetAllFirstAlbumDates(),
+		CreationDates:   zone.GetAllCreationDates(),
 	}
 
 	tmpl, err := template.ParseFiles("templates/index.html")

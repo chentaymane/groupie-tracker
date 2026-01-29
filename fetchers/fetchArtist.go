@@ -3,6 +3,7 @@ package zone
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -34,15 +35,13 @@ func GetAllNameOfAtrtist() []string {
 	artistsNames := []string{}
 	for _, r := range Artists {
 		if checkrepeat(artistsNames, r.Name) {
-			artistsNames = append(artistsNames, r.Name+" - member")
+			artistsNames = append(artistsNames, r.Name+" - artist")
 		}
 	}
 	return artistsNames
 }
 
-func FilterByName(artists []Artist,name string) ([]Artist) {
-	
-
+func FilterByName(artists []Artist, name string) []Artist {
 	var filtred []Artist
 	for _, r := range artists {
 		if strings.Contains(strings.ToLower(r.Name), strings.ToLower(name)) {
@@ -51,4 +50,40 @@ func FilterByName(artists []Artist,name string) ([]Artist) {
 		}
 	}
 	return filtred
+}
+
+func GetAllMemberNames() []string {
+	Artists, _ := FetchArtists()
+	memberNames := []string{}
+	for _, r := range Artists {
+		for _, m := range r.Members {
+			if checkrepeat(memberNames, m) {
+				memberNames = append(memberNames, m+" - member")
+			}
+		}
+	}
+	return memberNames
+}
+
+func GetAllFirstAlbumDates() []string {
+	Artists, _ := FetchArtists()
+	dates := []string{}
+	for _, r := range Artists {
+		if checkrepeat(dates, r.FirstAlbum) {
+			dates = append(dates, r.FirstAlbum+" - first album")
+		}
+	}
+	return dates
+}
+
+func GetAllCreationDates() []string {
+	Artists, _ := FetchArtists()
+	dates := []string{}
+	for _, r := range Artists {
+		creationDateStr := strconv.Itoa(r.CreationDate)
+		if checkrepeat(dates, creationDateStr) {
+			dates = append(dates, creationDateStr+" - creation date")
+		}
+	}
+	return dates
 }
