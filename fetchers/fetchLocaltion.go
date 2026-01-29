@@ -63,7 +63,7 @@ func Getallolocations(locations map[int][]string) []string {
 	for _, location := range locations {
 		for _, l := range location {
 			if checkrepeat(allloct, l) {
-				l = strings.ReplaceAll(l,"-"," ")
+				l = strings.ReplaceAll(l, "-", " ")
 				allloct = append(allloct, l+"- location")
 			}
 		}

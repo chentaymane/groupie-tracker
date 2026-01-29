@@ -1,8 +1,8 @@
 package zone
 
 import (
-	"strconv"
 	"strings"
+
 	zone "zone/fetchers"
 )
 
@@ -12,30 +12,6 @@ func FormatDate(dates []string) []string {
 		dates[i] = strings.TrimPrefix(d, "*")
 	}
 	return dates
-}
-
-func parseInt(value string, def int) int {
-	n, err := strconv.Atoi(value)
-	if err != nil {
-		return def
-	}
-	return n
-}
-
-func normalizeRange(min, max *int) {
-	if *max < *min {
-		*min, *max = *max, *min
-	}
-}
-
-func matchMembers(a zone.Artist, members []string) bool {
-	for _, m := range members {
-		n, _ := strconv.Atoi(m)
-		if len(a.Members) == n {
-			return true
-		}
-	}
-	return false
 }
 
 func FilterByLocation(artists []zone.Artist, search string) ([]zone.Artist, error) {
@@ -53,10 +29,10 @@ func FilterByLocation(artists []zone.Artist, search string) ([]zone.Artist, erro
 
 	for _, artist := range artists {
 		locations := allLocations[artist.ID]
-		
+
 		for _, loc := range locations {
-			loc = strings.ReplaceAll(loc,"-"," ")
-			if strings.Contains(strings.ToLower(loc), search) {
+			if strings.Contains(strings.ToLower(strings.ReplaceAll(loc, "-", " ")), search) {
+
 				result = append(result, artist)
 				break
 			}

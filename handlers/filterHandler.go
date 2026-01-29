@@ -4,21 +4,13 @@ import (
 	"bytes"
 	"html/template"
 	"net/http"
-	"strconv"
 	"strings"
 
 	zone "zone/fetchers"
 )
 
 type FilterViewData struct {
-	Artists []zone.Artist
-
-	CreationFrom int
-	CreationTo   int
-	FirstFrom    int
-	FirstTo      int
-
-	MembersChecked map[int]bool
+	Artists        []zone.Artist
 	LocationSearch string
 	Locations      []string
 }
@@ -35,70 +27,25 @@ func HandleFilter(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	creationFrom := parseInt(r.FormValue("creationFrom"), 1958)
-	creationTo := parseInt(r.FormValue("creationTo"), 2026)
-	firstFrom := parseInt(r.FormValue("firstFrom"), 1958)
-	firstTo := parseInt(r.FormValue("firstTo"), 2026)
-	membersChecked := r.Form["members"]
 	locationSearch := r.FormValue("searchLocation")
 	if strings.HasSuffix(locationSearch, "- location") {
-		locationSearch = strings.TrimSpace(locationSearch[:len("- location")])
+		locationSearch = strings.TrimSuffix(locationSearch, "- location")
 	}
-
-	normalizeRange(&creationFrom, &creationTo)
-	normalizeRange(&firstFrom, &firstTo)
-
-	choseFilter := false
 	filtered := []zone.Artist{}
-
-	for _, a := range artists {
-		if creationFrom != 1958 || creationTo != 2026 {
-			choseFilter = true
-			if a.CreationDate < creationFrom || a.CreationDate > creationTo {
-				continue
-			}
-		}
-
-		if firstFrom != 1958 || firstTo != 2026 {
-			choseFilter = true
-			year, _ := strconv.Atoi(a.FirstAlbum[len(a.FirstAlbum)-4:])
-			if year < firstFrom || year > firstTo {
-				continue
-			}
-		}
-
-		if len(membersChecked) > 0 {
-			choseFilter = true
-			if !matchMembers(a, membersChecked) {
-				continue
-			}
-		}
-
-		filtered = append(filtered, a)
-	}
+	choseFilter := false
 
 	if locationSearch != "" {
 		choseFilter = true
-		filtered, err = FilterByLocation(filtered, locationSearch)
+		filtered, err = FilterByLocation(artists, locationSearch)
 		if err != nil {
 			HandleError(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
 	}
 
-	membersMap := make(map[int]bool)
-	for _, m := range membersChecked {
-		n, _ := strconv.Atoi(m)
-		membersMap[n] = true
-	}
-
 	data := FilterViewData{
-		Artists:        artists, // default
-		CreationFrom:   creationFrom,
-		CreationTo:     creationTo,
-		FirstFrom:      firstFrom,
-		FirstTo:        firstTo,
-		MembersChecked: membersMap,
+		Artists: artists, // default
+
 		LocationSearch: locationSearch,
 	}
 

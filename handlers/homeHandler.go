@@ -26,14 +26,9 @@ func HandlerHome(w http.ResponseWriter, r *http.Request) {
 	}
 	locations, err := zone.FetchAllLocations()
 	data := FilterViewData{
-		Artists:        artists,
-		CreationFrom:   1958,
-		CreationTo:     2026,
-		FirstFrom:      1958,
-		FirstTo:        2026,
-		MembersChecked: make(map[int]bool),
-		LocationSearch: "",
-		Locations:      zone.Getallolocations(locations),
+		Artists: artists,
+		
+		Locations: zone.Getallolocations(locations),
 	}
 
 	tmpl, err := template.ParseFiles("templates/index.html")
