@@ -36,11 +36,14 @@ func HandleFilter(w http.ResponseWriter, r *http.Request) {
 	filtered := artists
 	validFilter := false
 
+	search = strings.ToLower(search) // case insensitive
+
 	if search != "" {
-		parts := strings.Split(search, "-")
-		if len(parts) == 2 {
-			query := strings.TrimSpace(parts[0])
-			filterType := strings.ToLower(strings.TrimSpace(parts[1]))
+		lastDash := strings.LastIndex(search, "-")
+
+		if lastDash != -1 {
+			query := strings.TrimSpace(search[:lastDash])
+			filterType := strings.TrimSpace(search[lastDash+1:])
 
 			switch filterType {
 			case "location":
@@ -51,7 +54,7 @@ func HandleFilter(w http.ResponseWriter, r *http.Request) {
 				}
 				validFilter = true
 
-			case "artist":
+			case "artist/band":
 				filtered = zone.FilterByName(artists, query)
 				validFilter = true
 
@@ -82,7 +85,7 @@ func HandleFilter(w http.ResponseWriter, r *http.Request) {
 
 	if validFilter {
 		data.Artists = filtered
-	}else {
+	} else {
 		data.Artists = []zone.Artist{}
 	}
 

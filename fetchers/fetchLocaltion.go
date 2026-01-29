@@ -3,7 +3,6 @@ package zone
 import (
 	"encoding/json"
 	"net/http"
-	"strings"
 )
 
 // Locations represents the structure of the location data from the API
@@ -61,8 +60,8 @@ func Getallolocations() []string {
 	var allloct []string
 	for _, location := range locations {
 		for _, l := range location {
-			if checkrepeat(allloct, strings.ReplaceAll(l, "-", " ")+" - location") {
-				allloct = append(allloct, strings.ReplaceAll(l, "-", " ")+" - location")
+			if checkrepeat(allloct, l+" - location") {
+				allloct = append(allloct, l+" - location")
 			}
 		}
 	}
