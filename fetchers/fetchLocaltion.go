@@ -2,6 +2,7 @@ package zone
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 )
 
@@ -16,7 +17,7 @@ type AllLocations struct {
 	} `json:"index"`
 }
 
-var locationsCache map[int][]string
+var locationsCache *AllLocations
 
 // FetchLocation retrieves the locations for a given artist ID from the external API
 func FetchLocation(id int) ([]string, error) {
@@ -25,10 +26,16 @@ func FetchLocation(id int) ([]string, error) {
 		return nil, err
 	}
 
-	return locations[id], nil
+	for _, idx := range locations.Index {
+		if idx.ID == id {
+			return idx.Locations, nil
+		}
+	}
+
+	return nil, errors.New("Not found")
 }
 
-func FetchAllLocations() (map[int][]string, error) {
+func FetchAllLocations() (*AllLocations, error) {
 	if locationsCache != nil {
 		return locationsCache, nil
 	}
@@ -45,21 +52,14 @@ func FetchAllLocations() (map[int][]string, error) {
 		return nil, err
 	}
 
-	// map artistID → locations
-	result := make(map[int][]string)
-	for _, item := range data.Index {
-		result[item.ID] = item.Locations
-	}
-
-	locationsCache = result
-	return result, nil
+	return &data, nil
 }
 
 func Getallolocations() []string {
 	locations, _ := FetchAllLocations()
 	var allloct []string
-	for _, location := range locations {
-		for _, l := range location {
+	for _, idx := range locations.Index {
+		for _, l := range idx.Locations {
 			if checkrepeat(allloct, l+" - location") {
 				allloct = append(allloct, l+" - location")
 			}

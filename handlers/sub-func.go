@@ -14,20 +14,20 @@ func FormatDate(dates []string) []string {
 	return dates
 }
 
-func FilterByLocation(artists []zone.Artist, search string) ([]zone.Artist,) {
-	allLocations, _ := zone.FetchAllLocations()
-
-
+func FilterByLocation(artists []zone.Artist, alllocations *zone.AllLocations, search string) []zone.Artist {
 	search = strings.ToLower(search)
 	var result []zone.Artist
 
 	for _, artist := range artists {
-		locations := allLocations[artist.ID]
+		for _, allloc := range alllocations.Index {
+			if allloc.ID == artist.ID {
+				for _, loc := range allloc.Locations {
+					if strings.Contains(strings.ToLower(loc), search) {
 
-		for _, loc := range locations {
-			if strings.Contains(strings.ToLower(loc), search) {
-
-				result = append(result, artist)
+						result = append(result, artist)
+						break
+					}
+				}
 				break
 			}
 		}
