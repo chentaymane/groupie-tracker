@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"net/http"
 	"strings"
+
 	zone "zone/fetchers"
 )
 
@@ -35,6 +36,11 @@ func HandleFilter(w http.ResponseWriter, r *http.Request) {
 
 	var filtered []zone.Artist
 	if search != "" {
+		lastDash := strings.LastIndex(search, " - ")
+		if lastDash != -1 {
+			search = strings.TrimSpace(search[:lastDash]) // remove type substring
+		}
+
 		filtered = SearchEverywhere(artists, search)
 	}
 
