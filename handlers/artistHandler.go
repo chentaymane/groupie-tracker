@@ -12,12 +12,12 @@ import (
 
 // HandlerArtist serves the artist detail page
 func HandlerArtist(w http.ResponseWriter, r *http.Request) {
-	idStr := strings.TrimPrefix(r.URL.Path, "/artist/")
-
 	if r.Method != http.MethodGet {
 		HandleError(w, http.StatusMethodNotAllowed, "Method Not Allowed")
 		return
 	}
+
+	idStr := strings.TrimPrefix(r.URL.Path, "/artist/")
 	if idStr == "" {
 		HandleError(w, http.StatusNotFound, "Page not found")
 		return

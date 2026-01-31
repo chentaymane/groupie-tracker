@@ -80,6 +80,10 @@ input[type="text"]:focus-visible {
   border-color: #5865f2;
 }
 
+.query-error{
+  color: #5865f2;
+}
+
 /* Range sliders */
 .range-group {
   display: flex;

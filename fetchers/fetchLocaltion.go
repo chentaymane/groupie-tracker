@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strings"
 )
 
 // Locations represents the structure of the location data from the API
@@ -55,8 +56,7 @@ func FetchAllLocations() (*AllLocations, error) {
 	return &data, nil
 }
 
-func Getallolocations() []string {
-	locations, _ := FetchAllLocations()
+func Getallolocations(locations *AllLocations) []string {
 	var allloct []string
 	for _, idx := range locations.Index {
 		for _, l := range idx.Locations {
@@ -66,6 +66,28 @@ func Getallolocations() []string {
 		}
 	}
 	return allloct
+}
+
+func FilterByLocation(artists []Artist, alllocations *AllLocations, search string) []Artist {
+	search = strings.ToLower(search)
+	var result []Artist
+
+	for _, artist := range artists {
+		for _, allloc := range alllocations.Index {
+			if allloc.ID == artist.ID {
+				for _, loc := range allloc.Locations {
+					if strings.Contains(strings.ToLower(loc), search) {
+
+						result = append(result, artist)
+						break
+					}
+				}
+				break
+			}
+		}
+	}
+
+	return result
 }
 
 func checkrepeat(Any []string, l string) bool {

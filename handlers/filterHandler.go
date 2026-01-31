@@ -2,6 +2,7 @@ package zone
 
 import (
 	"bytes"
+	"errors"
 	"html/template"
 	"net/http"
 	"strings"
@@ -10,14 +11,10 @@ import (
 )
 
 type FilterViewData struct {
-	Artists        []zone.Artist
-	LocationSearch string
-
-	Locations       []string
-	ArtistNames     []string
-	MemberNames     []string
-	FirstAlbumDates []string
-	CreationDates   []string
+	Artists     []zone.Artist
+	Search      string
+	SearchError string
+	Suggestions []string
 }
 
 func HandleFilter(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +35,8 @@ func HandleFilter(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	search := strings.ToLower(strings.TrimSpace(r.FormValue("searchLocation")))
+	search := strings.ToLower(strings.TrimSpace(r.FormValue("search")))
+	searchError := ""
 
 	var filtered []zone.Artist
 	if search != "" {
@@ -49,20 +47,21 @@ func HandleFilter(w http.ResponseWriter, r *http.Request) {
 			query = strings.TrimSpace(search[:lastDash])
 			queryType = strings.TrimSpace(search[lastDash+3:])
 		}
-		filtered = SearchEverywhere(artists, locations, query, queryType)
+		filtered, err = SearchEverywhere(artists, locations, query, queryType)
+		if err != nil {
+			searchError = err.Error()
+		}
+
 	} else {
 		// no query, show all
 		filtered = artists
 	}
 
 	data := FilterViewData{
-		Artists:         filtered,
-		LocationSearch:  search,
-		Locations:       zone.Getallolocations(),
-		ArtistNames:     zone.GetAllNameOfAtrtist(),
-		MemberNames:     zone.GetAllMemberNames(),
-		FirstAlbumDates: zone.GetAllFirstAlbumDates(),
-		CreationDates:   zone.GetAllCreationDates(),
+		Artists:     filtered,
+		Search:      r.FormValue("search"),
+		SearchError: searchError,
+		Suggestions: GetFilterSuggestions(artists, locations),
 	}
 
 	tmpl, err := template.ParseFiles("templates/index.html")
@@ -79,14 +78,15 @@ func HandleFilter(w http.ResponseWriter, r *http.Request) {
 	buf.WriteTo(w)
 }
 
-func SearchEverywhere(artists []zone.Artist, locations *zone.AllLocations, query string, queryType string) []zone.Artist {
+func SearchEverywhere(artists []zone.Artist, locations *zone.AllLocations, query string, queryType string) ([]zone.Artist, error) {
+	result := []zone.Artist{}
 	if queryType == "" {
 		// use all categories
 		out := make(chan []zone.Artist, 5)
 
 		go func() { out <- zone.FilterByName(artists, query) }()
 		go func() { out <- zone.FilterByMember(artists, query) }()
-		go func() { out <- FilterByLocation(artists, locations, query) }()
+		go func() { out <- zone.FilterByLocation(artists, locations, query) }()
 		go func() { out <- zone.FilterByFirstAlbum(artists, query) }()
 		go func() { out <- zone.FilterByCreationDate(artists, query) }()
 
@@ -99,32 +99,33 @@ func SearchEverywhere(artists []zone.Artist, locations *zone.AllLocations, query
 			}
 		}
 
-		var merged []zone.Artist
 		for _, a := range unique {
-			merged = append(merged, a)
+			result = append(result, a)
 		}
 
-		return merged
 	} else {
-
-		var filtered []zone.Artist
 		switch queryType {
 		case "location":
-			filtered = FilterByLocation(artists, locations, query)
+			result = zone.FilterByLocation(artists, locations, query)
 
 		case "artist/band":
-			filtered = zone.FilterByName(artists, query)
+			result = zone.FilterByName(artists, query)
 
 		case "member":
-			filtered = zone.FilterByMember(artists, query)
+			result = zone.FilterByMember(artists, query)
 
 		case "first album":
-			filtered = zone.FilterByFirstAlbum(artists, query)
+			result = zone.FilterByFirstAlbum(artists, query)
 
 		case "creation date":
-			filtered = zone.FilterByCreationDate(artists, query)
+			result = zone.FilterByCreationDate(artists, query)
+		default:
+			return nil, errors.New("Bad category '" + queryType + "'")
 		}
-
-		return filtered
 	}
+
+	if len(result) == 0 {
+		return nil, errors.New("Bad query '" + query + "'")
+	}
+	return result, nil
 }

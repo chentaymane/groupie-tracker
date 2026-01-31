@@ -19,5 +19,8 @@ func main() {
 	http.HandleFunc("/artist/", zone.HandlerArtist)
 	http.HandleFunc("/filter", zone.HandleFilter)
 	fmt.Println("Server running on http://localhost:8080")
-	http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		fmt.Println("Failed to listen on port :8080")
+	}
 }

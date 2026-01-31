@@ -26,31 +26,16 @@
         <input
           type="text"
           list="suggestions"
-          name="searchLocation"
+          name="search"
           placeholder="City, artist, member..."
-          value="{{.LocationSearch}}"
+          value="{{.Search}}"
         >
+        <p class="query-error">{{.SearchError}}</p>
 
         <!-- Suggestions -->
         <datalist id="suggestions">
 
-          {{range .Locations}}
-            <option value="{{.}}">
-          {{end}}
-
-          {{range .ArtistNames}}
-            <option value="{{.}}">
-          {{end}}
-
-          {{range .MemberNames}}
-            <option value="{{.}}">
-          {{end}}
-
-          {{range .FirstAlbumDates}}
-            <option value="{{.}}">
-          {{end}}
-
-          {{range .CreationDates}}
+          {{range .Suggestions}}
             <option value="{{.}}">
           {{end}}
 

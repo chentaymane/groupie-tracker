@@ -25,14 +25,15 @@ func HandlerHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := FilterViewData{
-		Artists: artists,
+	locations, err := zone.FetchAllLocations()
+	if err != nil {
+		HandleError(w, http.StatusInternalServerError, "500 Internal Server Error")
+		return
+	}
 
-		Locations:       zone.Getallolocations(),
-		ArtistNames:     zone.GetAllNameOfAtrtist(),
-		MemberNames:     zone.GetAllMemberNames(),
-		FirstAlbumDates: zone.GetAllFirstAlbumDates(),
-		CreationDates:   zone.GetAllCreationDates(),
+	data := FilterViewData{
+		Artists:     artists,
+		Suggestions: GetFilterSuggestions(artists, locations),
 	}
 
 	tmpl, err := template.ParseFiles("templates/index.html")

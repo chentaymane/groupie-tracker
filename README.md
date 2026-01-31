@@ -8,6 +8,12 @@
 * **Members**
 * **Concerts** (locations and dates)
 
+**Search bar**:
+- Search by artist/band, member, first album, creation date, location
+- if query ends in " - something" it's used to specify category
+- otherwise the whole query is matched
+- empty query is ignored
+
 ---
 
 ## Features
